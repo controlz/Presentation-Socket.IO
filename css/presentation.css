@@ -1,0 +1,10 @@
+.reveal section h1 { color: #ffffff; }
+
+.photo-page div {
+	float: left;
+	margin: 0;
+}
+
+.reveal section.photo-page img {
+	margin: 0;
+}

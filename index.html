@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Intro to Web Sockets using Socket.IO</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+		<link rel="stylesheet" href="css/presentation.css">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Intro to Web Sockets</h1>
+					<h3>using Node JS & Socket.IO</h3>
+					<p>
+						By Michael Mottola 
+					</p>
+				</section>				
+
+				<section data-background="#4d7e65" data-background-transition="slide" data-transition="linear">
+					<section>
+						<h2>What are Web Sockets?</h2>						
+					</section>
+
+					<section>
+						<h2>Web Sockets...</h2>
+						<ul>
+							<li>were developed as HTML5 initiative</li>
+							<li>is a full-duplex single TCP socket connection</li>
+							<li>provides "realtime" communication between<br> servers and clients</li>
+							<li>works consistently across multiple platforms</li>
+							<li>supports cross domain communication</li>
+							<li>does not make AJAX obsolete</li>
+						</ul>	
+						<aside class="notes">
+							- HTML5 initiative—introduced the WebSocket JavaScript interface
+							- Full duplex: communication in two directions simultaneously - telephone (because both parties can talk at once)
+						</aside>
+					</section>
+
+					<section>
+						<h2>Use Cases</h2>
+						<ul>
+							<li>Multiplayer online games</li>
+	    					<li>Chat applications</li></li>
+	    					<li>Live sports ticker</li>
+	    					<li>Realtime updating social streams</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Server Side Implementations</h2>
+						<ul style="float: left;">
+						    <li>Node.js
+						      <ul>
+						        <li><a href="http://socket.io/">Socket.IO</a></li>
+						        <li><a href="https://github.com/Worlize/WebSocket-Node">WebSocket-Node</a></li>
+						        <li><a href="https://github.com/einaros/ws">ws</a></li>
+						      </ul>
+						    </li>
+						    <li>Java
+						      <ul>
+						        <li><a href="http://www.eclipse.org/jetty/">Jetty</a></li>
+						      </ul>
+						    </li>
+						    <li>Ruby
+						      <ul>
+						        <li><a href="http://github.com/igrigorik/em-websocket">EventMachine</a></li>
+						      </ul>
+						    </li>
+					    </ul>
+					    <ul style="float: right;">
+					    	<li>Python
+						      <ul>
+						        <li><a href="http://code.google.com/p/pywebsocket/">pywebsocket</a></li>
+						        <li><a href="https://github.com/facebook/tornado">Tornado</a>
+						      </li></ul>
+						    </li>
+						    <li>Erlang
+						      <ul>
+						        <li><a href="https://github.com/michilu/shirasu">Shirasu</a></li>
+						      </ul>
+						    </li>
+						    <li>C++
+						      <ul>
+						        <li><a href="http://git.warmcat.com/cgi-bin/cgit/libwebsockets/">libwebsockets</a></li>
+						      </ul>
+						    </li>
+						    <li>.NET
+						      <ul>
+						        <li><a href="http://superwebsocket.codeplex.com/">SuperWebSocket</a></li>
+						      </ul>
+						    </li>
+						  </ul>
+					</section>
+				</section>
+
+				<section data-background="#007777" data-background-transition="slide" data-transition="linear">
+					<section>
+						<img src="images/socket.io.png" />
+						<a href="http://socket.io">http://socket.io</a>
+					</section>
+
+					<section>
+						<h2>Installing Socket.io</h2>
+						<pre><code data-trim contenteditable>
+npm install socket.io
+						</code></pre>
+					</section>
+
+					<section>
+						<div>
+							<h5>Server Side JavaScript</h5>
+							<pre><code data-trim contenteditable>
+var io = require('socket.io').listen(80);
+
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
+							</code></pre>
+						</div>
+
+						<div>
+							<h5>Client Side JavaScript</h5>
+							<pre><code data-trim contenteditable>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://localhost');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
+</script>
+							</code></pre>
+						</div>
+
+					</section>
+
+					<section>
+						<h3>Socket.io using Express Web Framework</h3>
+						<pre><code data-trim contenteditable>
+var app = require('express')()
+  , server = require('http').createServer(app)
+  , io = require('socket.io').listen(server);
+
+server.listen(80);
+
+app.get('/', function (req, res) {
+  res.render('home');
+});
+
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+}); 
+						</code></pre>	
+					</section>
+
+					<section>
+					<div>
+						<h3>Sending a Broadcast</h3>
+						<pre><code data-trim contenteditable>
+var io = require('socket.io').listen(80);
+
+io.sockets.on('connection', function (socket) {
+  socket.broadcast.emit('user connected');
+});
+						</code></pre>
+						</div>
+						<div style="padding-top: 20px;">
+							<h3>Sending Volatile Messages</h3>
+							<pre><code data-trim contenteditable>
+var io = require('socket.io').listen(80);
+
+io.sockets.on('connection', function (socket) {
+  var tweets = setInterval(function () {
+    getFancyTweet(function (tweet) {
+      socket.volatile.emit('fancy tweet', tweet);
+    });
+  }, 100);
+
+  socket.on('disconnect', function () {
+    clearInterval(tweets);
+  });
+});
+							</code></pre>
+						</div>
+						<aside class="notes">
+							Broadcasting means sending a message to everyone else except for the socket that starts it.
+
+							Volatile Messages: If a certain client is not ready to receive message (because of network slowness or other issues).
+							if he doesn't receive ALL the tweets your application won't suffer.
+						</aside>
+					</section>
+
+				</section>
+				
+				<section data-background="#8c4738" data-background-transition="slide" data-transition="linear">
+					<section>
+						<h1>Example App</h1>
+						<h3>My Test Run with Socket.io</h3>
+					</section>
+					<section class="photo-page">
+						<h3>Football Pong</h3>
+						<div style="width: 250px; float: left;">
+							<img src="images/example/full_field.jpg" alt="Full Field">
+						</div>
+						<div style="width: 250px; float: left;">
+							<img src="images/example/field_goal_position.jpg" alt="Field Goal Position">
+						</div>
+						
+						<div style="width: 200px; float: left;">
+							<img src="images/example/endzone.jpg" alt="Endzone">
+						</div>
+						<div style="width: 250px; float: left;">
+							<img src="images/example/field_goal.jpg" alt="Field Goal">
+						</div>
+					</section>
+					<section>
+						<h2>Football Pong Scoreboard</h2>
+						<h6>https://github.com/controlz/Football-Pong-Scoreboard</h6>
+						<div style="width:500px; margin: 0 auto;">
+							<img src="images/example/scoreboard.jpg" alt="Scoreboard">
+						</div>
+					</section>
+				</section>
+
+				<section>
+					<h2>Learn more about sockets</h2>
+					<ul>
+						<li><a href="http://www.websocket.org/">http://www.websocket.org/</a></li>
+						<li><a href="http://pusher.com/websockets">http://pusher.com/websockets</a></li>
+						<li><a href="http://www.html5rocks.com/en/tutorials/websockets/basics/">http://www.html5rocks.com/en/tutorials/websockets/basics/</a></li>
+						<li><a href="http://socket.io/">http://socket.io/</a></li>
+					</ul>
+					<h3 style="margin-top: 60px;">THE END</h3>
+					<h4>Thanks for Viewing</h4>
+					<h6>- Michael Mottola</h6>
+				</section>	
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
