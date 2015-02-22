@@ -1,6 +1,6 @@
 # Intro to WebSockets using Socket.IO
 
-Presentation I made at a [Software Niagara](https://github.com/softwareniagara/) event called DevTricks. Goal was to tell others about WebSockets and how to get started with implementing WebSockets in [NodeJS](http://nodejs.org/) using [Socket.IO](http://socket.io).
+Presentation I made for a [Software Niagara](https://github.com/softwareniagara/) event called [DevTricks](https://github.com/softwareniagara/devtricks). Goal was to tell others about WebSockets and how to get started with implementing WebSockets in [NodeJS](http://nodejs.org/) using [Socket.IO](http://socket.io).
 
 View the presentation at [http://michaelencode.com/presentations/2014-02-18-socket-io/](http://michaelencode.com/presentations/2014-02-18-socket-io/).
 
